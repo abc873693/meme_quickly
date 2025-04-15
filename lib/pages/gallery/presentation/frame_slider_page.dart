@@ -1,4 +1,6 @@
+import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class FrameSliderPage extends StatefulWidget {
   final int startFrame;
@@ -44,7 +46,24 @@ class _FrameSliderPageState extends State<FrameSliderPage> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                Text('Frame: $currentFrame'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Frame: $currentFrame'),
+                    SizedBox(width: 8.0),
+                    IconButton(
+                      icon: const Icon(Icons.file_download_outlined),
+                      onPressed: () async {
+                        await FileSaver.instance.saveFile(
+                          name: 'frame_$currentFrame.jpg',
+                          bytes: await rootBundle
+                              .load('assets/images/frame_$currentFrame.jpg')
+                              .then((value) => value.buffer.asUint8List()),
+                        );
+                      },
+                    ),
+                  ],
+                ),
                 Slider(
                   value: currentFrame.toDouble(),
                   min: widget.startFrame.toDouble(),
