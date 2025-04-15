@@ -60,6 +60,8 @@ class ImageGridPageState extends State<ImageGridPage> {
                               subtitle: item['text']?.toString() ?? '',
                               startFrame: item['start_frame'] as int,
                               endFrame: item['end_frame'] as int,
+                              startSeconds: item['start_seconds'] as double,
+                              endSeconds: item['end_seconds'] as double,
                             ),
                       ),
                     );

@@ -6,12 +6,16 @@ class FrameSliderPage extends StatefulWidget {
   final String subtitle;
   final int startFrame;
   final int endFrame;
+  final double startSeconds;
+  final double endSeconds;
 
   const FrameSliderPage({
     super.key,
     required this.subtitle,
     required this.startFrame,
     required this.endFrame,
+    required this.startSeconds,
+    required this.endSeconds,
   });
 
   @override
@@ -55,6 +59,10 @@ class _FrameSliderPageState extends State<FrameSliderPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Text(
+                      '${Duration(milliseconds: (widget.startSeconds * 1000).toInt())}',
+                    ),
+                    Spacer(),
                     Text('Frame: $currentFrame'),
                     SizedBox(width: 8.0),
                     IconButton(
@@ -67,6 +75,10 @@ class _FrameSliderPageState extends State<FrameSliderPage> {
                               .then((value) => value.buffer.asUint8List()),
                         );
                       },
+                    ),
+                    Spacer(),
+                    Text(
+                      '${Duration(milliseconds: (widget.endSeconds * 1000).toInt())}',
                     ),
                   ],
                 ),
