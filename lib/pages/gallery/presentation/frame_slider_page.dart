@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class FrameSliderPage extends StatefulWidget {
+  final String subtitle;
   final int startFrame;
   final int endFrame;
 
   const FrameSliderPage({
     super.key,
+    required this.subtitle,
     required this.startFrame,
     required this.endFrame,
   });
@@ -46,6 +48,10 @@ class _FrameSliderPageState extends State<FrameSliderPage> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
+                Text(
+                  widget.subtitle,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

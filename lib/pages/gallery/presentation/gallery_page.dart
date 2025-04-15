@@ -57,6 +57,7 @@ class ImageGridPageState extends State<ImageGridPage> {
                       MaterialPageRoute(
                         builder:
                             (context) => FrameSliderPage(
+                              subtitle: item['text']?.toString() ?? '',
                               startFrame: item['start_frame'] as int,
                               endFrame: item['end_frame'] as int,
                             ),
