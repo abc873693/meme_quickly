@@ -106,6 +106,10 @@ class ImageGridPageState extends State<ImageGridPage> {
                       child: Image.network(
                         'https://me.rainvisitor.me/$imageName',
                         // Assumes images are in assets/images
+                        headers: {
+                          'Access-Control-Allow-Origin':
+                              'https://abc873693.github.io/',
+                        },
                         fit: BoxFit.cover,
                       ),
                     ),
