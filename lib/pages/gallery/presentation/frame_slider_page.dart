@@ -1,22 +1,12 @@
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:meme_quickly/pages/gallery/domain/subtitle_model.dart';
 
 class FrameSliderPage extends StatefulWidget {
-  final String subtitle;
-  final int startFrame;
-  final int endFrame;
-  final double startSeconds;
-  final double endSeconds;
+  final SubtitleModel model;
 
-  const FrameSliderPage({
-    super.key,
-    required this.subtitle,
-    required this.startFrame,
-    required this.endFrame,
-    required this.startSeconds,
-    required this.endSeconds,
-  });
+  const FrameSliderPage({super.key, required this.model});
 
   @override
   State<FrameSliderPage> createState() => _FrameSliderPageState();
@@ -28,7 +18,7 @@ class _FrameSliderPageState extends State<FrameSliderPage> {
   @override
   void initState() {
     super.initState();
-    currentFrame = widget.startFrame; // Initialize with the start frame
+    currentFrame = widget.model.startFrame; // Initialize with the start frame
   }
 
   @override
@@ -53,14 +43,14 @@ class _FrameSliderPageState extends State<FrameSliderPage> {
             child: Column(
               children: [
                 Text(
-                  widget.subtitle,
+                  widget.model.text,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '${Duration(milliseconds: (widget.startSeconds * 1000).toInt())}',
+                      '${Duration(milliseconds: (widget.model.startSeconds * 1000).toInt())}',
                     ),
                     Spacer(),
                     Text('Frame: $currentFrame'),
@@ -78,15 +68,15 @@ class _FrameSliderPageState extends State<FrameSliderPage> {
                     ),
                     Spacer(),
                     Text(
-                      '${Duration(milliseconds: (widget.endSeconds * 1000).toInt())}',
+                      '${Duration(milliseconds: (widget.model.endSeconds * 1000).toInt())}',
                     ),
                   ],
                 ),
                 Slider(
                   value: currentFrame.toDouble(),
-                  min: widget.startFrame.toDouble(),
-                  max: widget.endFrame.toDouble(),
-                  divisions: widget.endFrame - widget.startFrame,
+                  min: widget.model.startFrame.toDouble(),
+                  max: widget.model.endFrame.toDouble(),
+                  divisions: widget.model.endFrame - widget.model.startFrame,
                   label: currentFrame.toString(),
                   onChanged: (value) {
                     setState(() {

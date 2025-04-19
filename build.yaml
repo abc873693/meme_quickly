@@ -1,0 +1,30 @@
+targets:
+  $default:
+    sources:
+      - lib/**
+      - swaggers/**
+    builders:
+      json_serializable:
+        options:
+          # Options configure how source code is generated for every
+          # `@JsonSerializable`-annotated class in the package.
+          # Reference from https://github.com/google/json_serializable.dart/blob/master/json_annotation/lib/src/json_serializable.dart
+          any_map: false
+          checked: false
+          constructor: ""
+          create_factory: true
+          create_field_map: false
+          create_to_json: true
+          disallow_unrecognized_keys: false
+          explicit_to_json: true
+          field_rename: snake
+          generic_argument_factories: false
+          ignore_unannotated: false
+          include_if_null: true
+      swagger_dart_code_generator:
+        options:
+          input_folder: 'swaggers/'
+          output_folder: 'lib/api/gen/'
+          separate_models: true
+          use_path_for_request_names: true
+          multipart_file_type: 'MultipartFile'

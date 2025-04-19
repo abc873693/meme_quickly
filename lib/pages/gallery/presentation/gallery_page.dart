@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'dart:developer' show log;
+
 import 'package:flutter/material.dart';
-import 'package:meme_quickly/pages/gallery/domain/subtitle_data.dart';
+import 'package:flutter/services.dart';
+import 'package:meme_quickly/pages/gallery/domain/subtitle_model.dart';
 import 'package:meme_quickly/pages/gallery/presentation/frame_slider_page.dart';
 
 class ImageGridPage extends StatefulWidget {
@@ -11,17 +15,39 @@ class ImageGridPage extends StatefulWidget {
 
 class ImageGridPageState extends State<ImageGridPage> {
   String searchText = '';
+  final subtitleList = <SubtitleModel>[];
+  var filteredItems = <SubtitleModel>[];
+
+  @override
+  void initState() {
+    _loadModel();
+    super.initState();
+  }
+
+  Future<void> _loadModel() async {
+    final value = await rootBundle.load('assets/output.json');
+    final jsonString = utf8.decode(value.buffer.asUint8List());
+    final Map<String, dynamic> jsonData = jsonDecode(jsonString);
+    log(jsonData['subtitles'].runtimeType.toString());
+    if (jsonData['subtitles'] case List<dynamic> list) {
+      for (final map in list) {
+        final subtitle = SubtitleModel.fromJson(map);
+        subtitleList.add(subtitle);
+      }
+    } else {
+      throw Exception('Failed to load subtitles');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     // Filter items based on searchText
-    final filteredItems =
-        subtitles.where((item) {
-          return item['text']!.toString().contains(searchText);
-        }).toList();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Image Grid')),
+      appBar: AppBar(
+        title: const Text('Image Grid'),
+        actions: [Text('subtitle count = ${subtitleList.length}')],
+      ),
       body: Column(
         children: [
           Padding(
@@ -34,56 +60,60 @@ class ImageGridPageState extends State<ImageGridPage> {
               onChanged: (value) {
                 setState(() {
                   searchText = value;
+                  filteredItems =
+                      subtitleList.where((item) {
+                        return item.text.toString().contains(searchText);
+                      }).toList();
                 });
-              },
-            ),
-          ),
-          Expanded(
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3, // Display 3 images per row
-                crossAxisSpacing: 8.0,
-                mainAxisSpacing: 8.0,
-              ),
-              itemCount: filteredItems.length,
-              itemBuilder: (context, index) {
-                final item = filteredItems[index];
-                final imageName = 'frame_${item['start_frame']}.jpg';
 
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder:
-                            (context) => FrameSliderPage(
-                              subtitle: item['text']?.toString() ?? '',
-                              startFrame: item['start_frame'] as int,
-                              endFrame: item['end_frame'] as int,
-                              startSeconds: item['start_seconds'] as double,
-                              endSeconds: item['end_seconds'] as double,
-                            ),
-                      ),
-                    );
-                  },
-                  child: GridTile(
-                    footer: GridTileBar(
-                      backgroundColor: Colors.black54,
-                      title: Text(
-                        item['text']!.toString(),
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                    ),
-                    child: Image.asset(
-                      'assets/images/$imageName',
-                      // Assumes images are in assets/images
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                );
+                log('filter count = ${filteredItems[111].text}');
+                log('filter count = ${filteredItems.length}');
               },
             ),
           ),
+          if (searchText.isEmpty)
+            Offstage()
+          else
+            Expanded(
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3, // Display 3 images per row
+                  crossAxisSpacing: 8.0,
+                  mainAxisSpacing: 8.0,
+                ),
+                itemCount: filteredItems.length,
+                itemBuilder: (context, index) {
+                  final item = filteredItems[index];
+                  final imageName =
+                      'ZhenHuan_${item.episode}_${item.startFrame}.jpg';
+
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FrameSliderPage(model: item),
+                        ),
+                      );
+                    },
+                    child: GridTile(
+                      footer: GridTileBar(
+                        backgroundColor: Colors.black54,
+                        title: Text(
+                          item.text,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ),
+                      child: Image.network(
+                        'https://me.rainvisitor.me/$imageName',
+                        // Assumes images are in assets/images
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
         ],
       ),
     );
