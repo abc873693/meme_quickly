@@ -66,7 +66,6 @@ class ImageGridPageState extends State<ImageGridPage> {
                       }).toList();
                 });
 
-                log('filter count = ${filteredItems[111].text}');
                 log('filter count = ${filteredItems.length}');
               },
             ),
