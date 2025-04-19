@@ -101,7 +101,7 @@ class ImageGridPageState extends State<ImageGridPage> {
                   itemBuilder: (context, index) {
                     final item = filteredItems[index];
                     final imageName =
-                        'ZhenHuan_${item.episode}_${item.startFrame}.jpg';
+                        'ZhenHuan_${item.episode}_${item.startFrame + 10}.jpg';
                     return GestureDetector(
                       onTap: () {
                         Navigator.push(

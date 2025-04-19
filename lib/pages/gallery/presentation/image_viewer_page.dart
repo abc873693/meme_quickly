@@ -17,7 +17,7 @@ class _ImageViewerPageState extends State<ImageViewerPage> {
   @override
   Widget build(BuildContext context) {
     final imageName =
-        'ZhenHuan_${widget.model.episode}_${widget.model.startFrame}.jpg';
+        'ZhenHuan_${widget.model.episode}_${widget.model.startFrame + 10}.jpg';
     final url = 'https://$thumbHost/$imageName';
     return Scaffold(
       appBar: AppBar(
